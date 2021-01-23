@@ -11,22 +11,14 @@ import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private val binding: ActivityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
     private val viewModel: MainViewModel by viewModels()
 
-//    override fun onCreateView(
-//        parent: View?,
-//        name: String,
-//        context: Context,
-//        attrs: AttributeSet
-//    ): View = binding.root
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
 
         setUpViewModel()
@@ -97,11 +89,8 @@ class MainActivity : AppCompatActivity() {
             lblTotalPerPersonAmount.text = defaultFormat.format(result.totalPerPerson)
             lblTotalTipAmount.text = defaultFormat.format(result.totalTip)
             lblTipPerPersonAmount.text = defaultFormat.format(result.tipPerPerson)
-
             lblTipPercentAmount.text = "${result.tipPercent} %"
             lblSplitPercentAmount.text = result.splitNum.toString()
-
-
         }
     }
 }

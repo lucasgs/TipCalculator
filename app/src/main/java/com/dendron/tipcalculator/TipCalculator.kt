@@ -9,8 +9,8 @@ class TipCalculator {
         billTotal: Double,
         tipPercent: Int,
         splitNum: Int,
-        roundUp : Boolean) : Result
-    {
+        roundUp: Boolean
+    ): Result {
         return Result().apply {
             totalTip = 0.01 * tipPercent * billTotal
             totalToPay = billTotal + totalTip

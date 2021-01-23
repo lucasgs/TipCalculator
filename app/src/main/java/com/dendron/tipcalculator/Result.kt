@@ -4,7 +4,7 @@ class Result {
     var billTotal: Double = 0.0
     var tipPercent: Int = 0
     var splitNum: Int = 0
-    var roundUp : Boolean = false
+    var roundUp: Boolean = true
     var totalTip = 0.0
     var tipPerPerson = 0.0
     var totalPerPerson = 0.0

@@ -11,9 +11,9 @@ class MainViewModel : ViewModel() {
 
     private val tipCalculator = TipCalculator()
 
-    private var billTotal: Double = 100.0
-    private var tipPercent: Int = 10
-    private var splitNum: Int = 2
+    private var billTotal: Double = 0.0
+    private var tipPercent: Int = 0
+    private var splitNum: Int = 0
     private var roundUp: Boolean = true
 
     fun setBillTotal(total: Double) {
