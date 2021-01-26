@@ -1,4 +1,4 @@
-package com.dendron.tipcalculator
+package com.dendron.tipcalculator.domain
 
 class Result {
     var billTotal: Double = 0.0

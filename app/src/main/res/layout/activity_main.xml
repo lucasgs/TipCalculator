@@ -8,32 +8,37 @@
 
     <TextView
         android:id="@+id/lblBillTotal"
+        style="@style/TextLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:labelFor="@+id/edtBillTotal"
-        android:text="Bill Total:"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        android:text="@string/bill_total_label"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/edtBillTotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:autofillHints="0.00"
         android:ems="10"
         android:inputType="numberDecimal"
+        app:layout_constraintBottom_toBottomOf="@+id/lblBillTotal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/lblBillTotal"
         app:layout_constraintTop_toTopOf="@+id/lblBillTotal" />
 
     <TextView
         android:id="@+id/lblTipPercent"
+        style="@style/TextLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:labelFor="@+id/sbTipPercent"
-        android:text="Tip %:"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        android:text="@string/tip_percentage_label"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/edtBillTotal" />
 
 
@@ -42,6 +47,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:max="100"
+        app:layout_constraintBottom_toBottomOf="@+id/lblTipPercent"
         app:layout_constraintEnd_toEndOf="@+id/edtBillTotal"
         app:layout_constraintStart_toStartOf="@+id/edtBillTotal"
         app:layout_constraintTop_toTopOf="@+id/lblTipPercent" />
@@ -50,19 +56,22 @@
         android:id="@+id/lblTipPercentAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/sbTipPercent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/sbTipPercent"
-        app:layout_constraintTop_toTopOf="@+id/sbTipPercent" />
+        app:layout_constraintTop_toTopOf="@+id/sbTipPercent"
+        tools:text="100 %" />
 
     <TextView
         android:id="@+id/lblSplit"
+        style="@style/TextLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:labelFor="@id/sbSplit"
-        android:text="Split:"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        android:text="@string/split_label"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/sbTipPercent" />
 
     <SeekBar
@@ -70,25 +79,28 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:max="20"
+        app:layout_constraintBottom_toBottomOf="@+id/lblSplit"
         app:layout_constraintEnd_toEndOf="@+id/sbTipPercent"
         app:layout_constraintStart_toStartOf="@+id/sbTipPercent"
         app:layout_constraintTop_toTopOf="@+id/lblSplit" />
 
     <TextView
-        android:id="@+id/lblSplitPercentAmount"
+        android:id="@+id/lblSplitCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/sbSplit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/sbSplit"
-        app:layout_constraintTop_toTopOf="@+id/sbSplit" />
+        app:layout_constraintTop_toTopOf="@+id/sbSplit"
+        tools:text="0" />
 
 
     <Button
         android:id="@+id/btnRoundDown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Round down"
+        android:text="@string/round_down_label"
         app:layout_constraintEnd_toStartOf="@+id/btnRoundUp"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -98,93 +110,107 @@
         android:id="@+id/btnRoundUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Round up"
+        android:text="@string/round_up_label"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnRoundDown"
-        app:layout_constraintTop_toBottomOf="@+id/sbSplit" />
+        app:layout_constraintStart_toEndOf="@+id/btnRoundDown" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="189dp" />
+        app:layout_constraintGuide_begin="210dp" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="@+id/lblSplitCount"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
     <TextView
         android:id="@+id/lblTotalToPay"
+        style="@style/ResultTextLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Total to pay:"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
+        android:layout_marginTop="16dp"
+        android:text="@string/total_to_pay_label"
+        app:layout_constraintStart_toStartOf="@+id/btnRoundDown"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <TextView
         android:id="@+id/lblTotalToPayAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="$0.00"
+        style="@style/ResultTextText"
         app:layout_constraintEnd_toEndOf="@+id/sbSplit"
-        app:layout_constraintStart_toEndOf="@+id/lblTotalToPay"
-        app:layout_constraintTop_toTopOf="@+id/lblTotalToPay" />
+        app:layout_constraintTop_toTopOf="@+id/lblTotalToPay"
+        tools:text="$0.00" />
 
     <TextView
         android:id="@+id/lblTotalPerPerson"
+        style="@style/ResultTextLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Total per person:"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        android:text="@string/total_per_person_label"
+        app:layout_constraintStart_toStartOf="@+id/btnRoundDown"
         app:layout_constraintTop_toBottomOf="@+id/lblTotalToPay" />
 
     <TextView
         android:id="@+id/lblTotalPerPersonAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="$0.00"
+        style="@style/ResultTextText"
         app:layout_constraintEnd_toEndOf="@+id/lblTotalToPayAmount"
-        app:layout_constraintTop_toTopOf="@+id/lblTotalPerPerson" />
+        app:layout_constraintTop_toTopOf="@+id/lblTotalPerPerson"
+        tools:text="$0.00" />
 
     <TextView
         android:id="@+id/lblTotalTip"
+        style="@style/ResultTextLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Total tip:"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        android:text="@string/total_tip_label"
+        app:layout_constraintStart_toStartOf="@+id/btnRoundDown"
         app:layout_constraintTop_toBottomOf="@+id/lblTotalPerPerson" />
 
     <TextView
         android:id="@+id/lblTotalTipAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="$0.00"
+        style="@style/ResultTextText"
         app:layout_constraintEnd_toEndOf="@+id/lblTotalPerPersonAmount"
-        app:layout_constraintTop_toTopOf="@+id/lblTotalTip" />
+        app:layout_constraintTop_toTopOf="@+id/lblTotalTip"
+        tools:text="$0.00" />
 
     <TextView
         android:id="@+id/lblTipPerPerson"
+        style="@style/ResultTextLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Tip per person:"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        android:text="@string/tip_per_person_label"
+        app:layout_constraintStart_toStartOf="@+id/btnRoundDown"
         app:layout_constraintTop_toBottomOf="@+id/lblTotalTip" />
 
     <TextView
         android:id="@+id/lblTipPerPersonAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="$0.00"
+        style="@style/ResultTextText"
         app:layout_constraintEnd_toEndOf="@+id/lblTotalTipAmount"
-        app:layout_constraintTop_toTopOf="@+id/lblTipPerPerson" />
+        app:layout_constraintTop_toTopOf="@+id/lblTipPerPerson"
+        tools:text="$0.00" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
+        android:id="@+id/guideline_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"

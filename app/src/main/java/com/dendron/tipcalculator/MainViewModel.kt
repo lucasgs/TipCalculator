@@ -3,6 +3,8 @@ package com.dendron.tipcalculator
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.dendron.tipcalculator.domain.Result
+import com.dendron.tipcalculator.domain.TipCalculator
 
 class MainViewModel : ViewModel() {
 
@@ -12,9 +14,13 @@ class MainViewModel : ViewModel() {
     private val tipCalculator = TipCalculator()
 
     private var billTotal: Double = 0.0
-    private var tipPercent: Int = 0
-    private var splitNum: Int = 0
+    private var tipPercent: Int = 10
+    private var splitNum: Int = 1
     private var roundUp: Boolean = true
+
+    init {
+        recalculate()
+    }
 
     fun setBillTotal(total: Double) {
         billTotal = total

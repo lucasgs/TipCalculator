@@ -1,4 +1,4 @@
-package com.dendron.tipcalculator
+package com.dendron.tipcalculator.domain
 
 import kotlin.math.ceil
 import kotlin.math.floor

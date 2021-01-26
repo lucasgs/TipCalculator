@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.dendron.tipcalculator.databinding.ActivityMainBinding
+import com.dendron.tipcalculator.domain.Result
 import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
@@ -44,8 +45,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            sbTipPercent.progress = 10
-            sbTipPercent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            //sbTipPercent.progress = 10
+            sbTipPercent.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
                     progress: Int,
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
             })
 
-            sbSplit.progress = 1
+            //sbSplit.progress = 1
             sbSplit.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                     viewModel.setSplitNumber(progress)
@@ -89,8 +90,8 @@ class MainActivity : AppCompatActivity() {
             lblTotalPerPersonAmount.text = defaultFormat.format(result.totalPerPerson)
             lblTotalTipAmount.text = defaultFormat.format(result.totalTip)
             lblTipPerPersonAmount.text = defaultFormat.format(result.tipPerPerson)
-            lblTipPercentAmount.text = "${result.tipPercent} %"
-            lblSplitPercentAmount.text = result.splitNum.toString()
+            lblTipPercentAmount.text = getString(R.string.tip_percentage_amount_title, result.tipPercent)
+            lblSplitCount.text = result.splitNum.toString()
         }
     }
 }
