@@ -6,12 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.dendron.tipcalculator.domain.Result
 import com.dendron.tipcalculator.domain.TipCalculator
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val tipCalculator: TipCalculator = TipCalculator()) : ViewModel() {
 
     private val calculationResult = MutableLiveData<Result>()
     fun getResults(): LiveData<Result> = calculationResult
-
-    private val tipCalculator = TipCalculator()
 
     private var billTotal: Double = 0.0
     private var tipPercent: Int = 10
