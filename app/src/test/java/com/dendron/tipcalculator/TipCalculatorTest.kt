@@ -1,5 +1,6 @@
-package com.dendron.tipcalculator.domain
+package com.dendron.tipcalculator
 
+import com.dendron.tipcalculator.domain.TipCalculator
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
