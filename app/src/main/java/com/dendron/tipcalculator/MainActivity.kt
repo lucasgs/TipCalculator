@@ -7,8 +7,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.dendron.tipcalculator.databinding.ActivityMainBinding
-import com.dendron.tipcalculator.domain.Result
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.chip.ChipGroup
 import java.text.NumberFormat
@@ -25,7 +29,14 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                @Suppress("UNCHECKED_CAST")
+                return MainViewModel(extras.createSavedStateHandle()) as T
+            }
+        }
+    }
     private val defaultFormat: NumberFormat by lazy { NumberFormat.getCurrencyInstance() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +49,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpViewModel() {
-        viewModel.getResults().observe(this, { result ->
-            showNumbers(result)
-        })
+        viewModel.getUiState().observe(this) { state ->
+            showUiState(state)
+        }
     }
 
     private fun setUpViews() {
@@ -131,16 +142,16 @@ class MainActivity : AppCompatActivity() {
         viewModel.setTipPercentage(percent)
     }
 
-    private fun showNumbers(result: Result) {
+    private fun showUiState(state: MainUiState) {
         binding.apply {
-            lblTotalToPayAmount.text = defaultFormat.format(result.totalToPay)
-            lblTotalPerPersonAmount.text = defaultFormat.format(result.totalPerPerson)
-            lblTotalTipAmount.text = defaultFormat.format(result.totalTip)
-            lblTipPerPersonAmount.text = defaultFormat.format(result.tipPerPerson)
-            lblTipPercentAmount.text = getString(R.string.tip_percentage_amount_title, result.tipPercent)
-            lblSplitCount.text = result.splitNum.toString()
-            btnSplitDecrease.isEnabled = result.splitNum > MIN_SPLIT_COUNT
-            btnSplitIncrease.isEnabled = result.splitNum < MAX_SPLIT_COUNT
+            lblTotalToPayAmount.text = defaultFormat.format(state.result.totalToPay)
+            lblTotalPerPersonAmount.text = defaultFormat.format(state.result.totalPerPerson)
+            lblTotalTipAmount.text = defaultFormat.format(state.result.totalTip)
+            lblTipPerPersonAmount.text = defaultFormat.format(state.result.tipPerPerson)
+            lblTipPercentAmount.text = getString(R.string.tip_percentage_amount_title, state.tipPercent)
+            lblSplitCount.text = state.splitNum.toString()
+            btnSplitDecrease.isEnabled = state.splitNum > MIN_SPLIT_COUNT
+            btnSplitIncrease.isEnabled = state.splitNum < MAX_SPLIT_COUNT
         }
     }
 }

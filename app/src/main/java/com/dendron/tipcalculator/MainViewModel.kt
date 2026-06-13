@@ -2,53 +2,70 @@ package com.dendron.tipcalculator
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.dendron.tipcalculator.domain.Result
 import com.dendron.tipcalculator.domain.TipCalculator
 
-class MainViewModel(private val tipCalculator: TipCalculator = TipCalculator()) : ViewModel() {
+class MainViewModel(
+    private val savedStateHandle: SavedStateHandle,
+    private val tipCalculator: TipCalculator = TipCalculator(),
+) : ViewModel() {
 
-    private val calculationResult = MutableLiveData<Result>()
-    fun getResults(): LiveData<Result> = calculationResult
-
-    private var billTotal: Double = 0.0
-    private var tipPercent: Int = 10
-    private var splitNum: Int = 1
-    private var roundUp: Boolean = true
-
-    init {
-        recalculate()
+    private companion object {
+        const val KEY_BILL_TOTAL = "billTotal"
+        const val KEY_TIP_PERCENT = "tipPercent"
+        const val KEY_SPLIT_NUM = "splitNum"
+        const val KEY_ROUND_UP = "roundUp"
+        const val DEFAULT_TIP_PERCENT = 10
+        const val DEFAULT_SPLIT_NUM = 1
+        const val DEFAULT_ROUND_UP = true
     }
 
+    private val uiState = MutableLiveData(createUiState())
+
+    fun getUiState(): LiveData<MainUiState> = uiState
+
     fun setBillTotal(total: Double) {
-        billTotal = total
+        savedStateHandle[KEY_BILL_TOTAL] = total
         recalculate()
     }
 
     fun setTipPercentage(tip: Int) {
-        tipPercent = tip
+        savedStateHandle[KEY_TIP_PERCENT] = tip
         recalculate()
     }
 
     fun setSplitNumber(number: Int) {
-        splitNum = number
+        savedStateHandle[KEY_SPLIT_NUM] = number
         recalculate()
     }
 
     fun setIsRoundUp(isRoundUp: Boolean) {
-        roundUp = isRoundUp
+        savedStateHandle[KEY_ROUND_UP] = isRoundUp
         recalculate()
     }
 
     private fun recalculate() {
+        uiState.value = createUiState()
+    }
 
-        val result = tipCalculator.calculate(
+    private fun createUiState(): MainUiState {
+        val billTotal = savedStateHandle[KEY_BILL_TOTAL] ?: 0.0
+        val tipPercent = savedStateHandle[KEY_TIP_PERCENT] ?: DEFAULT_TIP_PERCENT
+        val splitNum = savedStateHandle[KEY_SPLIT_NUM] ?: DEFAULT_SPLIT_NUM
+        val roundUp = savedStateHandle[KEY_ROUND_UP] ?: DEFAULT_ROUND_UP
+
+        return MainUiState(
             billTotal = billTotal,
             tipPercent = tipPercent,
             splitNum = splitNum,
-            roundUp = roundUp
+            roundUp = roundUp,
+            result = tipCalculator.calculate(
+                billTotal = billTotal,
+                tipPercent = tipPercent,
+                splitNum = splitNum,
+                roundUp = roundUp,
+            ),
         )
-        calculationResult.postValue(result)
     }
-
 }
