@@ -5,11 +5,7 @@ import java.text.NumberFormat
 class MainDisplayStateFormatter(
     private val currencyFormat: NumberFormat,
 ) {
-    fun format(
-        state: MainUiState,
-        minSplitCount: Int,
-        maxSplitCount: Int,
-    ): MainDisplayState {
+    fun format(state: MainUiState): MainDisplayState {
         return MainDisplayState(
             billInput = state.billInput,
             tipPercent = state.tipPercent,
@@ -21,8 +17,8 @@ class MainDisplayStateFormatter(
             totalTipText = currencyFormat.format(state.result.totalTip),
             tipPerPersonText = currencyFormat.format(state.result.tipPerPerson),
             tipPercentText = "${state.tipPercent} %",
-            isSplitDecreaseEnabled = state.splitNum > minSplitCount,
-            isSplitIncreaseEnabled = state.splitNum < maxSplitCount,
+            isSplitDecreaseEnabled = state.splitNum > TipCalculatorLimits.MIN_SPLIT_COUNT,
+            isSplitIncreaseEnabled = state.splitNum < TipCalculatorLimits.MAX_SPLIT_COUNT,
         )
     }
 }

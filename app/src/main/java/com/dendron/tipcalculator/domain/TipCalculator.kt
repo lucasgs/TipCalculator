@@ -1,9 +1,10 @@
 package com.dendron.tipcalculator.domain
 
+import javax.inject.Inject
 import kotlin.math.ceil
 import kotlin.math.floor
 
-class TipCalculator {
+class TipCalculator @Inject constructor() {
 
     fun calculate(
         billTotal: Double,

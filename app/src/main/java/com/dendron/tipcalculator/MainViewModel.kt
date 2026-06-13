@@ -5,10 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.dendron.tipcalculator.domain.TipCalculator
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val tipCalculator: TipCalculator = TipCalculator(),
+    private val tipCalculator: TipCalculator,
 ) : ViewModel() {
 
     private companion object {

@@ -32,7 +32,7 @@ class MainDisplayStateFormatterTest {
             ),
         )
 
-        val displayState = formatter.format(state, minSplitCount = 1, maxSplitCount = 20)
+        val displayState = formatter.format(state)
 
         assertEquals("12.5", displayState.billInput)
         assertEquals("$14.62", displayState.totalToPayText)
