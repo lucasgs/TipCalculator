@@ -7,6 +7,8 @@ A simple Android app for calculating tips, rounding the final total, and splitti
 - Choose common tip presets or a custom tip percentage
 - Split the bill between multiple people
 - Round the total up or keep the exact amount
+- Reset the calculator to default values
+- Share a calculation summary
 - Automatic light/dark theme support
 - See total tip, total to pay, tip per person, and total per person
 
@@ -34,6 +36,8 @@ A simple Android app for calculating tips, rounding the final total, and splitti
 ./gradlew testDebugUnitTest
 ./gradlew connectedDebugAndroidTest
 ```
+
+`connectedDebugAndroidTest` requires a running emulator or connected device.
 
 ## Release readiness
 Run these checks before shipping:

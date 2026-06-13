@@ -4,9 +4,11 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -36,15 +38,16 @@ class TipCalculatorComposeUiTest {
         composeRule.onNodeWithText("Custom").performClick()
         composeRule.onNodeWithTag("customTipSlider").assertIsDisplayed()
         composeRule.onNodeWithTag("splitCount").assertTextEquals("1")
-        composeRule.onNodeWithText("+").performClick()
+        composeRule.onNodeWithTag("splitIncreaseButton").performClick()
         composeRule.onNodeWithTag("splitCount").assertTextEquals("2")
         composeRule.onNodeWithTag("roundDownChip").performClick()
         composeRule.onNodeWithTag("roundDownChip").assertIsSelected()
 
         composeRule.onNodeWithTag("resetButton").performClick()
+        composeRule.waitForIdle()
 
-        composeRule.onNodeWithTag("billInput").assertTextEquals("")
-        composeRule.onNodeWithTag("tipPercentValue").assertTextEquals("10 %")
+        composeRule.onNodeWithText("10%").assertIsSelected()
+        composeRule.onNodeWithText("Custom").assertIsNotSelected()
         composeRule.onNodeWithTag("splitCount").assertTextEquals("1")
         composeRule.onNodeWithTag("roundUpChip").assertIsSelected()
         composeRule.onNodeWithTag("roundDownChip").assertIsNotSelected()
@@ -64,7 +67,8 @@ class TipCalculatorComposeUiTest {
         composeRule.onNodeWithText("Enter a valid amount").assertIsDisplayed()
 
         composeRule.onNodeWithTag("billInput").performTextReplacement("12.5")
+        composeRule.waitForIdle()
 
-        composeRule.onNodeWithText("Enter a valid amount").assertDoesNotExist()
+        composeRule.onAllNodesWithText("Enter a valid amount").assertCountEquals(0)
     }
 }

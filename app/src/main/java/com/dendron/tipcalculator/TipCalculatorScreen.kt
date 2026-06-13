@@ -276,9 +276,11 @@ private fun TipCalculatorScreenContent(
                             OutlinedButton(
                                 onClick = onSplitDecrease,
                                 enabled = state.isSplitDecreaseEnabled,
-                                modifier = Modifier.semantics {
-                                    contentDescription = splitDecreaseDescription
-                                },
+                                modifier = Modifier
+                                    .testTag("splitDecreaseButton")
+                                    .semantics {
+                                        contentDescription = splitDecreaseDescription
+                                    },
                             ) {
                                 Text(stringResource(R.string.split_decrease_label))
                             }
@@ -294,9 +296,11 @@ private fun TipCalculatorScreenContent(
                             OutlinedButton(
                                 onClick = onSplitIncrease,
                                 enabled = state.isSplitIncreaseEnabled,
-                                modifier = Modifier.semantics {
-                                    contentDescription = splitIncreaseDescription
-                                },
+                                modifier = Modifier
+                                    .testTag("splitIncreaseButton")
+                                    .semantics {
+                                        contentDescription = splitIncreaseDescription
+                                    },
                             ) {
                                 Text(stringResource(R.string.split_increase_label))
                             }
