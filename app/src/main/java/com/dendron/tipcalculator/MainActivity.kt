@@ -8,13 +8,12 @@ import androidx.activity.viewModels
 import com.dendron.tipcalculator.ui.theme.TipCalculatorComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.NumberFormat
-import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
-    private val currentLocale: Locale by lazy { resources.configuration.locales[0] ?: Locale.getDefault() }
+    private val currentLocale by lazy { currentLocale() }
     private val displayStateFormatter: MainDisplayStateFormatter by lazy {
         MainDisplayStateFormatter(NumberFormat.getCurrencyInstance(currentLocale))
     }

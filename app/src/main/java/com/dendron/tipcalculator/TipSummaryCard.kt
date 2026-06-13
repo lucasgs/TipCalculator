@@ -13,6 +13,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -58,9 +59,11 @@ fun TipSummaryCard(
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.semantics {
-                    contentDescription = totalPerPersonDescription
-                },
+                modifier = Modifier
+                    .testTag("totalPerPersonValue")
+                    .semantics {
+                        contentDescription = totalPerPersonDescription
+                    },
             )
 
             HorizontalDivider(
@@ -80,13 +83,17 @@ fun TipSummaryCard(
             ) {
                 OutlinedButton(
                     onClick = onReset,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .testTag("resetButton"),
                 ) {
                     Text(stringResource(R.string.reset_action_label))
                 }
                 OutlinedButton(
                     onClick = onShare,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .testTag("shareButton"),
                 ) {
                     Text(stringResource(R.string.share_action_label))
                 }

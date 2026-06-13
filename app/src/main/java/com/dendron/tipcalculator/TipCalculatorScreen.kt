@@ -50,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
-import java.util.Locale
 
 @Composable
 fun TipCalculatorScreen(
@@ -58,7 +57,7 @@ fun TipCalculatorScreen(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val currentLocale = remember { context.resources.configuration.locales[0] ?: Locale.getDefault() }
+    val currentLocale = remember(context) { context.currentLocale() }
     val decimalSeparator = remember { DecimalFormatSymbols.getInstance(currentLocale).decimalSeparator }
     val groupingSeparator = remember { DecimalFormatSymbols.getInstance(currentLocale).groupingSeparator }
     val currencyFormat = remember(currentLocale) { NumberFormat.getCurrencyInstance(currentLocale) }
@@ -128,6 +127,7 @@ private fun TipCalculatorScreenContent(
     state: MainDisplayState,
     billInputError: String?,
     currencySymbol: String,
+    modifier: Modifier = Modifier,
     onBillInputChanged: (String) -> Unit,
     onTipPresetSelected: (Int?) -> Unit,
     onTipCustomChanged: (Int) -> Unit,
@@ -136,7 +136,6 @@ private fun TipCalculatorScreenContent(
     onRoundUpChanged: (Boolean) -> Unit,
     onReset: () -> Unit,
     onShare: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
     val tipPresetsGroupDescription = stringResource(R.string.tip_presets_group_description)
@@ -214,7 +213,11 @@ private fun TipCalculatorScreenContent(
                             text = stringResource(R.string.tip_percentage_label),
                             style = MaterialTheme.typography.titleMedium,
                         )
-                        Text(text = state.tipPercentText, style = MaterialTheme.typography.bodyLarge)
+                        Text(
+                            text = state.tipPercentText,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.testTag("tipPercentValue"),
+                        )
                     }
 
                     Row(

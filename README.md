@@ -31,9 +31,20 @@ A simple Android app for calculating tips, rounding the final total, and splitti
 
 ## Tests
 ```bash
-./gradlew test
-./gradlew connectedAndroidTest
+./gradlew testDebugUnitTest
+./gradlew connectedDebugAndroidTest
 ```
+
+## Release readiness
+Run these checks before shipping:
+```bash
+./gradlew testDebugUnitTest
+./gradlew connectedDebugAndroidTest
+./gradlew lintDebug
+./gradlew assembleDebug
+```
+
+CI runs unit tests, lint, and debug assembly via `.github/workflows/android.yml`.
 
 ## Module
 - `app/` – Android application module
