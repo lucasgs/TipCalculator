@@ -3,8 +3,10 @@
     <string name="bill_total_label">Bill Total:</string>
     <string name="tip_percentage_label">Tip %:</string>
     <string name="split_label">Split:</string>
+    <string name="rounding_label">Rounding:</string>
     <string name="round_down_label">Round down</string>
     <string name="round_up_label">Round up</string>
+    <string name="invalid_bill_total_error">Enter a valid amount</string>
     <string name="total_to_pay_label">Total to pay:</string>
     <string name="total_per_person_label">Total per person:</string>
     <string name="total_tip_label">Total tip:</string>

@@ -78,7 +78,7 @@
         android:id="@+id/sbSplit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:max="20"
+        android:max="19"
         app:layout_constraintBottom_toBottomOf="@+id/lblSplit"
         app:layout_constraintEnd_toEndOf="@+id/sbTipPercent"
         app:layout_constraintStart_toStartOf="@+id/sbTipPercent"
@@ -93,29 +93,43 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/sbSplit"
         app:layout_constraintTop_toTopOf="@+id/sbSplit"
-        tools:text="0" />
+        tools:text="1" />
 
-
-    <Button
-        android:id="@+id/btnRoundDown"
+    <TextView
+        android:id="@+id/lblRounding"
+        style="@style/TextLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/round_down_label"
-        app:layout_constraintEnd_toStartOf="@+id/btnRoundUp"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnRoundUp" />
+        android:layout_marginTop="16dp"
+        android:text="@string/rounding_label"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/sbSplit" />
 
-    <Button
-        android:id="@+id/btnRoundUp"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/rgRounding"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="@string/round_up_label"
+        android:checkedButton="@+id/rbRoundUp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnRoundDown" />
+        app:layout_constraintEnd_toEndOf="@+id/sbSplit"
+        app:layout_constraintStart_toStartOf="@+id/sbSplit"
+        app:layout_constraintTop_toBottomOf="@+id/lblRounding">
+
+        <RadioButton
+            android:id="@+id/rbRoundUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="@string/round_up_label" />
+
+        <RadioButton
+            android:id="@+id/rbRoundDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/round_down_label" />
+    </RadioGroup>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -140,7 +154,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/total_to_pay_label"
-        app:layout_constraintStart_toStartOf="@+id/btnRoundDown"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <TextView
@@ -159,7 +173,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/total_per_person_label"
-        app:layout_constraintStart_toStartOf="@+id/btnRoundDown"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/lblTotalToPay" />
 
     <TextView
@@ -178,7 +192,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/total_tip_label"
-        app:layout_constraintStart_toStartOf="@+id/btnRoundDown"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/lblTotalPerPerson" />
 
     <TextView
@@ -197,7 +211,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/tip_per_person_label"
-        app:layout_constraintStart_toStartOf="@+id/btnRoundDown"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/lblTotalTip" />
 
     <TextView

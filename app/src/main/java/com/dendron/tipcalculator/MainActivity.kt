@@ -1,6 +1,7 @@
 package com.dendron.tipcalculator
 
 import android.os.Bundle
+import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.activity.viewModels
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
 
         setUpViewModel()
         setUpViews()
+        initializeDefaults()
     }
 
     private fun setUpViewModel() {
@@ -37,15 +39,24 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
 
             edtBillTotal.addTextChangedListener {
-                val value = it?.toString()
+                val rawValue = it?.toString().orEmpty()
+                val normalizedValue = rawValue.replace(',', '.')
 
-                if (value?.isNotEmpty() == true) {
-                    val billTotal = value.toDouble()
-                    viewModel.setBillTotal(billTotal)
+                when {
+                    rawValue.isBlank() -> {
+                        edtBillTotal.error = null
+                        viewModel.setBillTotal(0.0)
+                    }
+                    normalizedValue.toDoubleOrNull() != null -> {
+                        edtBillTotal.error = null
+                        viewModel.setBillTotal(normalizedValue.toDouble())
+                    }
+                    else -> {
+                        edtBillTotal.error = getString(R.string.invalid_bill_total_error)
+                    }
                 }
             }
 
-            //sbTipPercent.progress = 10
             sbTipPercent.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
@@ -61,10 +72,9 @@ class MainActivity : AppCompatActivity() {
 
             })
 
-            //sbSplit.progress = 1
             sbSplit.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                    viewModel.setSplitNumber(progress)
+                    viewModel.setSplitNumber(progress + 1)
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -72,13 +82,17 @@ class MainActivity : AppCompatActivity() {
                 override fun onStopTrackingTouch(seekBar: SeekBar) {}
             })
 
-            btnRoundUp.setOnClickListener {
-                viewModel.setIsRoundUp(true)
+            rgRounding.setOnCheckedChangeListener { _: RadioGroup, checkedId: Int ->
+                viewModel.setIsRoundUp(checkedId == rbRoundUp.id)
             }
+        }
+    }
 
-            btnRoundDown.setOnClickListener {
-                viewModel.setIsRoundUp(false)
-            }
+    private fun initializeDefaults() {
+        binding.apply {
+            sbTipPercent.progress = 10
+            sbSplit.progress = 0
+            rgRounding.check(rbRoundUp.id)
         }
     }
 
