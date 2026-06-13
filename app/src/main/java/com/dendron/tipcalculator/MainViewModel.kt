@@ -12,6 +12,7 @@ class MainViewModel(
 ) : ViewModel() {
 
     private companion object {
+        const val KEY_BILL_INPUT = "billInput"
         const val KEY_BILL_TOTAL = "billTotal"
         const val KEY_TIP_PERCENT = "tipPercent"
         const val KEY_SPLIT_NUM = "splitNum"
@@ -25,8 +26,23 @@ class MainViewModel(
 
     fun getUiState(): LiveData<MainUiState> = uiState
 
+    fun setBillInput(input: String) {
+        savedStateHandle[KEY_BILL_INPUT] = input
+
+        val normalizedValue = input.replace(',', '.')
+        when {
+            input.isBlank() -> savedStateHandle[KEY_BILL_TOTAL] = 0.0
+            normalizedValue.toDoubleOrNull() != null -> {
+                savedStateHandle[KEY_BILL_TOTAL] = normalizedValue.toDouble()
+            }
+        }
+
+        recalculate()
+    }
+
     fun setBillTotal(total: Double) {
         savedStateHandle[KEY_BILL_TOTAL] = total
+        savedStateHandle[KEY_BILL_INPUT] = if (total == 0.0) "" else total.toString()
         recalculate()
     }
 
@@ -54,8 +70,10 @@ class MainViewModel(
         val tipPercent = savedStateHandle[KEY_TIP_PERCENT] ?: DEFAULT_TIP_PERCENT
         val splitNum = savedStateHandle[KEY_SPLIT_NUM] ?: DEFAULT_SPLIT_NUM
         val roundUp = savedStateHandle[KEY_ROUND_UP] ?: DEFAULT_ROUND_UP
+        val billInput = savedStateHandle[KEY_BILL_INPUT] ?: if (billTotal == 0.0) "" else billTotal.toString()
 
         return MainUiState(
+            billInput = billInput,
             billTotal = billTotal,
             tipPercent = tipPercent,
             splitNum = splitNum,

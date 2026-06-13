@@ -39,9 +39,10 @@ class MainViewModelTest {
             totalToPay = 110.0,
         )
 
-        viewModel.setBillTotal(100.0)
+        viewModel.setBillInput("100")
 
         assertEquals(result, viewModel.getUiState().value?.result)
+        assertEquals("100", viewModel.getUiState().value?.billInput)
     }
 
     @Test
@@ -57,7 +58,7 @@ class MainViewModelTest {
             totalToPay = 110.0,
         )
 
-        viewModel.setBillTotal(100.0)
+        viewModel.setBillInput("100")
         viewModel.setSplitNumber(2)
 
         assertEquals(result, viewModel.getUiState().value?.result)
@@ -76,7 +77,7 @@ class MainViewModelTest {
             totalToPay = 120.0,
         )
 
-        viewModel.setBillTotal(100.0)
+        viewModel.setBillInput("100")
         viewModel.setSplitNumber(2)
         viewModel.setTipPercentage(20)
 
@@ -87,6 +88,7 @@ class MainViewModelTest {
     fun restores_state_from_saved_state_handle() {
         val savedStateHandle = SavedStateHandle(
             mapOf(
+                "billInput" to "50.00",
                 "billTotal" to 50.0,
                 "tipPercent" to 15,
                 "splitNum" to 2,
@@ -97,6 +99,7 @@ class MainViewModelTest {
         val restoredViewModel = MainViewModel(savedStateHandle, tipCalculator)
         val state = restoredViewModel.getUiState().value!!
 
+        assertEquals("50.00", state.billInput)
         assertEquals(50.0, state.billTotal, 0.0)
         assertEquals(15, state.tipPercent)
         assertEquals(2, state.splitNum)

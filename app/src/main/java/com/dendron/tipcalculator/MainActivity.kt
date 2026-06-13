@@ -7,7 +7,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
@@ -24,6 +23,8 @@ class MainActivity : AppCompatActivity() {
         const val MAX_SPLIT_COUNT = 20
         const val DEFAULT_TIP_PERCENT = 10
     }
+
+    private var isSyncingUi = false
 
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -59,25 +60,30 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
 
             edtBillTotal.addTextChangedListener {
+                if (isSyncingUi) return@addTextChangedListener
+
                 val rawValue = it?.toString().orEmpty()
                 val normalizedValue = rawValue.replace(',', '.')
 
                 when {
                     rawValue.isBlank() -> {
                         tilBillTotal.error = null
-                        viewModel.setBillTotal(0.0)
+                        viewModel.setBillInput(rawValue)
                     }
                     normalizedValue.toDoubleOrNull() != null -> {
                         tilBillTotal.error = null
-                        viewModel.setBillTotal(normalizedValue.toDouble())
+                        viewModel.setBillInput(rawValue)
                     }
                     else -> {
                         tilBillTotal.error = getString(R.string.invalid_bill_total_error)
+                        viewModel.setBillInput(rawValue)
                     }
                 }
             }
 
             cgTipPresets.setOnCheckedStateChangeListener { _: ChipGroup, checkedIds: List<Int> ->
+                if (isSyncingUi) return@setOnCheckedStateChangeListener
+
                 when (checkedIds.firstOrNull()) {
                     chipTip10.id -> applyTipPreset(10)
                     chipTip15.id -> applyTipPreset(15)
@@ -93,6 +99,8 @@ class MainActivity : AppCompatActivity() {
                     progress: Int,
                     fromUser: Boolean
                 ) {
+                    if (isSyncingUi) return
+
                     if (fromUser) {
                         cgTipPresets.check(chipTipCustom.id)
                     }
@@ -119,6 +127,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             tgRounding.addOnButtonCheckedListener { _: MaterialButtonToggleGroup, checkedId: Int, isChecked: Boolean ->
+                if (isSyncingUi) return@addOnButtonCheckedListener
+
                 if (isChecked) {
                     viewModel.setIsRoundUp(checkedId == btnRoundUp.id)
                 }
@@ -127,13 +137,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeDefaults() {
-        binding.apply {
-            cgTipPresets.check(chipTip10.id)
-            sbTipPercent.progress = DEFAULT_TIP_PERCENT
-            sbTipPercent.isVisible = false
-            lblSplitCount.text = MIN_SPLIT_COUNT.toString()
-            tgRounding.check(btnRoundUp.id)
-        }
+        showUiState(viewModel.getUiState().value ?: MainUiState())
     }
 
     private fun applyTipPreset(percent: Int) {
@@ -144,6 +148,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun showUiState(state: MainUiState) {
         binding.apply {
+            isSyncingUi = true
+
+            syncBillTotal(state.billInput)
+            syncTipControls(state.tipPercent)
+            tgRounding.check(if (state.roundUp) btnRoundUp.id else btnRoundDown.id)
+
             lblTotalToPayAmount.text = defaultFormat.format(state.result.totalToPay)
             lblTotalPerPersonAmount.text = defaultFormat.format(state.result.totalPerPerson)
             lblTotalTipAmount.text = defaultFormat.format(state.result.totalTip)
@@ -152,6 +162,42 @@ class MainActivity : AppCompatActivity() {
             lblSplitCount.text = state.splitNum.toString()
             btnSplitDecrease.isEnabled = state.splitNum > MIN_SPLIT_COUNT
             btnSplitIncrease.isEnabled = state.splitNum < MAX_SPLIT_COUNT
+
+            isSyncingUi = false
+        }
+    }
+
+    private fun syncBillTotal(billInput: String) {
+        if (binding.edtBillTotal.text?.toString() != billInput) {
+            binding.edtBillTotal.setText(billInput)
+            binding.edtBillTotal.setSelection(billInput.length)
+        }
+    }
+
+    private fun syncTipControls(tipPercent: Int) {
+        binding.sbTipPercent.progress = tipPercent
+
+        when (tipPercent) {
+            10 -> {
+                binding.cgTipPresets.check(binding.chipTip10.id)
+                binding.sbTipPercent.isVisible = false
+            }
+            15 -> {
+                binding.cgTipPresets.check(binding.chipTip15.id)
+                binding.sbTipPercent.isVisible = false
+            }
+            18 -> {
+                binding.cgTipPresets.check(binding.chipTip18.id)
+                binding.sbTipPercent.isVisible = false
+            }
+            20 -> {
+                binding.cgTipPresets.check(binding.chipTip20.id)
+                binding.sbTipPercent.isVisible = false
+            }
+            else -> {
+                binding.cgTipPresets.check(binding.chipTipCustom.id)
+                binding.sbTipPercent.isVisible = true
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package com.dendron.tipcalculator
 import com.dendron.tipcalculator.domain.Result
 
 data class MainUiState(
+    val billInput: String = "",
     val billTotal: Double = 0.0,
     val tipPercent: Int = 10,
     val splitNum: Int = 1,
