@@ -6,7 +6,14 @@
     <string name="bill_total_hint">Enter bill amount</string>
     <string name="currency_prefix">$</string>
     <string name="tip_percentage_label">Tip</string>
-    <string name="split_label">Split:</string>
+    <string name="tip_preset_10">10%</string>
+    <string name="tip_preset_15">15%</string>
+    <string name="tip_preset_18">18%</string>
+    <string name="tip_preset_20">20%</string>
+    <string name="tip_preset_custom">Custom</string>
+    <string name="split_label">Split</string>
+    <string name="split_decrease_label">−</string>
+    <string name="split_increase_label">+</string>
     <string name="rounding_label">Rounding:</string>
     <string name="round_down_label">Round down</string>
     <string name="round_up_label">Round up</string>

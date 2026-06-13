@@ -5,19 +5,28 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import com.dendron.tipcalculator.databinding.ActivityMainBinding
 import com.dendron.tipcalculator.domain.Result
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.chip.ChipGroup
 import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
+
+    private companion object {
+        const val MIN_SPLIT_COUNT = 1
+        const val MAX_SPLIT_COUNT = 20
+        const val DEFAULT_TIP_PERCENT = 10
+    }
 
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
     private val viewModel: MainViewModel by viewModels()
+    private val defaultFormat: NumberFormat by lazy { NumberFormat.getCurrencyInstance() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,30 +66,46 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            cgTipPresets.setOnCheckedStateChangeListener { _: ChipGroup, checkedIds: List<Int> ->
+                when (checkedIds.firstOrNull()) {
+                    chipTip10.id -> applyTipPreset(10)
+                    chipTip15.id -> applyTipPreset(15)
+                    chipTip18.id -> applyTipPreset(18)
+                    chipTip20.id -> applyTipPreset(20)
+                    chipTipCustom.id -> sbTipPercent.isVisible = true
+                }
+            }
+
             sbTipPercent.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
                     progress: Int,
                     fromUser: Boolean
                 ) {
+                    if (fromUser) {
+                        cgTipPresets.check(chipTipCustom.id)
+                    }
                     viewModel.setTipPercentage(progress)
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-
             })
 
-            sbSplit.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                    viewModel.setSplitNumber(progress + 1)
+            btnSplitDecrease.setOnClickListener {
+                val current = lblSplitCount.text.toString().toIntOrNull() ?: MIN_SPLIT_COUNT
+                if (current > MIN_SPLIT_COUNT) {
+                    viewModel.setSplitNumber(current - 1)
                 }
+            }
 
-                override fun onStartTrackingTouch(seekBar: SeekBar) {}
-
-                override fun onStopTrackingTouch(seekBar: SeekBar) {}
-            })
+            btnSplitIncrease.setOnClickListener {
+                val current = lblSplitCount.text.toString().toIntOrNull() ?: MIN_SPLIT_COUNT
+                if (current < MAX_SPLIT_COUNT) {
+                    viewModel.setSplitNumber(current + 1)
+                }
+            }
 
             tgRounding.addOnButtonCheckedListener { _: MaterialButtonToggleGroup, checkedId: Int, isChecked: Boolean ->
                 if (isChecked) {
@@ -92,15 +117,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeDefaults() {
         binding.apply {
-            sbTipPercent.progress = 10
-            sbSplit.progress = 0
+            cgTipPresets.check(chipTip10.id)
+            sbTipPercent.progress = DEFAULT_TIP_PERCENT
+            sbTipPercent.isVisible = false
+            lblSplitCount.text = MIN_SPLIT_COUNT.toString()
             tgRounding.check(btnRoundUp.id)
         }
     }
 
-    private fun showNumbers(result: Result) {
-        val defaultFormat: NumberFormat = NumberFormat.getCurrencyInstance()
+    private fun applyTipPreset(percent: Int) {
+        binding.sbTipPercent.progress = percent
+        binding.sbTipPercent.isVisible = false
+        viewModel.setTipPercentage(percent)
+    }
 
+    private fun showNumbers(result: Result) {
         binding.apply {
             lblTotalToPayAmount.text = defaultFormat.format(result.totalToPay)
             lblTotalPerPersonAmount.text = defaultFormat.format(result.totalPerPerson)
@@ -108,6 +139,8 @@ class MainActivity : AppCompatActivity() {
             lblTipPerPersonAmount.text = defaultFormat.format(result.tipPerPerson)
             lblTipPercentAmount.text = getString(R.string.tip_percentage_amount_title, result.tipPercent)
             lblSplitCount.text = result.splitNum.toString()
+            btnSplitDecrease.isEnabled = result.splitNum > MIN_SPLIT_COUNT
+            btnSplitIncrease.isEnabled = result.splitNum < MAX_SPLIT_COUNT
         }
     }
 }
