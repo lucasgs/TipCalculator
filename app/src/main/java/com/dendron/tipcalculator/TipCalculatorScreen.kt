@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilterChip
@@ -24,8 +25,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import java.text.DecimalFormatSymbols
@@ -90,6 +103,17 @@ private fun TipCalculatorScreenContent(
     onRoundUpChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val focusManager = LocalFocusManager.current
+    val tipPresetsGroupDescription = stringResource(R.string.tip_presets_group_description)
+    val customTipSliderDescription = stringResource(R.string.custom_tip_slider_description)
+    val splitDecreaseDescription = stringResource(R.string.split_decrease_content_description)
+    val splitIncreaseDescription = stringResource(R.string.split_increase_content_description)
+    val splitCountDescription = pluralStringResource(
+        R.plurals.split_count_content_description,
+        state.splitNum,
+        state.splitNum,
+    )
+
     Surface(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
@@ -106,6 +130,7 @@ private fun TipCalculatorScreenContent(
                     Text(
                         text = stringResource(R.string.input_section_title),
                         style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.semantics { heading() },
                     )
 
                     OutlinedTextField(
@@ -119,11 +144,21 @@ private fun TipCalculatorScreenContent(
                         isError = billInputError != null,
                         supportingText = {
                             if (billInputError != null) {
-                                Text(billInputError)
+                                Text(
+                                    text = billInputError,
+                                    modifier = Modifier.semantics {
+                                        liveRegion = LiveRegionMode.Assertive
+                                    },
+                                )
                             }
                         },
                         prefix = { Text(stringResource(R.string.currency_prefix)) },
                         singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Decimal,
+                            imeAction = ImeAction.Done,
+                        ),
+                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                     )
 
                     Row(
@@ -144,7 +179,11 @@ private fun TipCalculatorScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 12.dp)
-                            .horizontalScroll(rememberScrollState()),
+                            .horizontalScroll(rememberScrollState())
+                            .selectableGroup()
+                            .semantics {
+                                contentDescription = tipPresetsGroupDescription
+                            },
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         TipPresetChip(stringResource(R.string.tip_preset_10), state.tipPercent == 10, onClick = { onTipPresetSelected(10) })
@@ -166,7 +205,11 @@ private fun TipCalculatorScreenContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)
-                                .testTag("customTipSlider"),
+                                .testTag("customTipSlider")
+                                .semantics {
+                                    contentDescription = customTipSliderDescription
+                                    stateDescription = state.tipPercentText
+                                },
                         )
                     }
 
@@ -185,15 +228,31 @@ private fun TipCalculatorScreenContent(
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            OutlinedButton(onClick = onSplitDecrease, enabled = state.isSplitDecreaseEnabled) {
+                            OutlinedButton(
+                                onClick = onSplitDecrease,
+                                enabled = state.isSplitDecreaseEnabled,
+                                modifier = Modifier.semantics {
+                                    contentDescription = splitDecreaseDescription
+                                },
+                            ) {
                                 Text(stringResource(R.string.split_decrease_label))
                             }
                             Text(
                                 text = state.splitNum.toString(),
                                 style = MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier.testTag("splitCount"),
+                                modifier = Modifier
+                                    .testTag("splitCount")
+                                    .semantics {
+                                        contentDescription = splitCountDescription
+                                    },
                             )
-                            OutlinedButton(onClick = onSplitIncrease, enabled = state.isSplitIncreaseEnabled) {
+                            OutlinedButton(
+                                onClick = onSplitIncrease,
+                                enabled = state.isSplitIncreaseEnabled,
+                                modifier = Modifier.semantics {
+                                    contentDescription = splitIncreaseDescription
+                                },
+                            ) {
                                 Text(stringResource(R.string.split_increase_label))
                             }
                         }
@@ -208,7 +267,8 @@ private fun TipCalculatorScreenContent(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp),
+                            .padding(top = 8.dp)
+                            .selectableGroup(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         FilterChip(
@@ -234,10 +294,18 @@ private fun TipCalculatorScreenContent(
 
 @Composable
 private fun TipPresetChip(text: String, selected: Boolean, onClick: () -> Unit) {
+    val selectedState = stringResource(
+        if (selected) R.string.selected_state else R.string.not_selected_state,
+    )
+    val stateText = stringResource(R.string.tip_preset_state_description, text, selectedState)
+
     FilterChip(
         selected = selected,
         onClick = onClick,
         label = { Text(text) },
+        modifier = Modifier.semantics {
+            stateDescription = stateText
+        },
     )
 }
 

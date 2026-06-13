@@ -23,4 +23,18 @@
     <string name="total_tip_label">Total tip:</string>
     <string name="tip_percentage_amount_title">%d %%</string>
     <string name="tip_per_person_label">Tip per person:</string>
+    <string name="tip_presets_group_description">Tip percentage presets</string>
+    <string name="custom_tip_slider_description">Custom tip percentage</string>
+    <string name="split_decrease_content_description">Decrease split count</string>
+    <string name="split_increase_content_description">Increase split count</string>
+    <string name="selected_state">Selected</string>
+    <string name="not_selected_state">Not selected</string>
+    <string name="tip_preset_state_description">%1$s, %2$s</string>
+    <string name="total_per_person_content_description">Total per person %1$s</string>
+    <string name="summary_row_content_description">%1$s %2$s</string>
+
+    <plurals name="split_count_content_description">
+        <item quantity="one">Split count: %d person</item>
+        <item quantity="other">Split count: %d people</item>
+    </plurals>
 </resources>
