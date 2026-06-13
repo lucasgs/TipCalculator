@@ -105,31 +105,35 @@
         app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/sbSplit" />
 
-    <RadioGroup
-        android:id="@+id/rgRounding"
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/tgRounding"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:checkedButton="@+id/rbRoundUp"
-        android:orientation="horizontal"
+        app:checkedButton="@+id/btnRoundUp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="@+id/sbSplit"
         app:layout_constraintStart_toStartOf="@+id/sbSplit"
-        app:layout_constraintTop_toBottomOf="@+id/lblRounding">
+        app:layout_constraintTop_toBottomOf="@+id/lblRounding"
+        app:selectionRequired="true"
+        app:singleSelection="true">
 
-        <RadioButton
-            android:id="@+id/rbRoundUp"
-            android:layout_width="wrap_content"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRoundUp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_weight="1"
             android:text="@string/round_up_label" />
 
-        <RadioButton
-            android:id="@+id/rbRoundDown"
-            android:layout_width="wrap_content"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRoundDown"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/round_down_label" />
-    </RadioGroup>
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"

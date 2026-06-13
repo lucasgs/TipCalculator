@@ -1,7 +1,6 @@
 package com.dendron.tipcalculator
 
 import android.os.Bundle
-import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.activity.viewModels
@@ -9,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.dendron.tipcalculator.databinding.ActivityMainBinding
 import com.dendron.tipcalculator.domain.Result
+import com.google.android.material.button.MaterialButtonToggleGroup
 import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
@@ -82,8 +82,10 @@ class MainActivity : AppCompatActivity() {
                 override fun onStopTrackingTouch(seekBar: SeekBar) {}
             })
 
-            rgRounding.setOnCheckedChangeListener { _: RadioGroup, checkedId: Int ->
-                viewModel.setIsRoundUp(checkedId == rbRoundUp.id)
+            tgRounding.addOnButtonCheckedListener { _: MaterialButtonToggleGroup, checkedId: Int, isChecked: Boolean ->
+                if (isChecked) {
+                    viewModel.setIsRoundUp(checkedId == btnRoundUp.id)
+                }
             }
         }
     }
@@ -92,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             sbTipPercent.progress = 10
             sbSplit.progress = 0
-            rgRounding.check(rbRoundUp.id)
+            tgRounding.check(btnRoundUp.id)
         }
     }
 
