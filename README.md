@@ -3,18 +3,20 @@
 A simple Android app for calculating tips, rounding the final total, and splitting the bill across multiple people.
 
 ## Features
-- Enter a bill total
-- Adjust the tip percentage
+- Enter a bill total with locale-aware decimal input
+- Choose common tip presets or a custom tip percentage
 - Split the bill between multiple people
 - Round the total up or keep the exact amount
+- Automatic light/dark theme support
 - See total tip, total to pay, tip per person, and total per person
 
 ## Tech stack
 - Kotlin 1.9.24
 - Android Gradle Plugin 8.5.2
 - Gradle 8.7
-- AndroidX, Material Components, ConstraintLayout
-- ViewBinding + ViewModel/LiveData
+- Jetpack Compose + Material 3
+- ViewModel + LiveData + SavedStateHandle
+- Hilt
 
 ## Requirements
 - Android Studio Jellyfish or newer
@@ -30,6 +32,7 @@ A simple Android app for calculating tips, rounding the final total, and splitti
 ## Tests
 ```bash
 ./gradlew test
+./gradlew connectedAndroidTest
 ```
 
 ## Module
