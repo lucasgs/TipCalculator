@@ -3,6 +3,7 @@ package com.dendron.tipcalculator
 data class MainDisplayState(
     val billInput: String,
     val tipPercent: Int,
+    val isCustomTip: Boolean,
     val splitNum: Int,
     val roundUp: Boolean,
     val totalToPayText: String,

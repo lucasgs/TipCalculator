@@ -17,6 +17,7 @@ class MainDisplayStateFormatterTest {
         val state = MainUiState(
             billInput = "12.5",
             tipPercent = 17,
+            isCustomTip = true,
             splitNum = 3,
             roundUp = false,
             result = Result(
@@ -39,6 +40,7 @@ class MainDisplayStateFormatterTest {
         assertEquals("$2.12", displayState.totalTipText)
         assertEquals("$0.71", displayState.tipPerPersonText)
         assertEquals("17 %", displayState.tipPercentText)
+        assertTrue(displayState.isCustomTip)
         assertTrue(displayState.isSplitDecreaseEnabled)
         assertTrue(displayState.isSplitIncreaseEnabled)
         assertFalse(displayState.roundUp)

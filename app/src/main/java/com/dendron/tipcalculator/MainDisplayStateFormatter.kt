@@ -13,6 +13,7 @@ class MainDisplayStateFormatter(
         return MainDisplayState(
             billInput = state.billInput,
             tipPercent = state.tipPercent,
+            isCustomTip = state.isCustomTip,
             splitNum = state.splitNum,
             roundUp = state.roundUp,
             totalToPayText = currencyFormat.format(state.result.totalToPay),

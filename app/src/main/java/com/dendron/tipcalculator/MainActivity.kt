@@ -1,19 +1,17 @@
 package com.dendron.tipcalculator
 
 import android.os.Bundle
-import android.widget.SeekBar
-import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.dendron.tipcalculator.databinding.ActivityMainBinding
-import com.google.android.material.button.MaterialButtonToggleGroup
-import com.google.android.material.chip.ChipGroup
+import com.dendron.tipcalculator.ui.theme.TipCalculatorComposeTheme
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 import java.util.Locale
@@ -23,10 +21,7 @@ class MainActivity : AppCompatActivity() {
     private companion object {
         const val MIN_SPLIT_COUNT = 1
         const val MAX_SPLIT_COUNT = 20
-        const val DEFAULT_TIP_PERCENT = 10
     }
-
-    private var isSyncingUi = false
 
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -40,6 +35,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     private val currentLocale: Locale by lazy { resources.configuration.locales[0] ?: Locale.getDefault() }
     private val decimalSeparator: Char by lazy { DecimalFormatSymbols.getInstance(currentLocale).decimalSeparator }
     private val groupingSeparator: Char by lazy { DecimalFormatSymbols.getInstance(currentLocale).groupingSeparator }
@@ -51,162 +47,64 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        setUpViewModel()
-        setUpViews()
-        initializeDefaults()
-    }
+        binding.composeRoot.setViewCompositionStrategy(
+            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed,
+        )
 
-    private fun setUpViewModel() {
-        viewModel.getUiState().observe(this) { state ->
-            showDisplayState(displayStateFormatter.format(state, MIN_SPLIT_COUNT, MAX_SPLIT_COUNT))
-        }
-    }
+        binding.composeRoot.setContent {
+            val uiState by viewModel.getUiState().observeAsState(MainUiState())
+            val displayState = displayStateFormatter.format(uiState, MIN_SPLIT_COUNT, MAX_SPLIT_COUNT)
+            val billInputError = uiState.billInput
+                .takeIf { it.isNotBlank() && parseLocalizedAmount(it) == null }
+                ?.let { getString(R.string.invalid_bill_total_error) }
 
-    private fun setUpViews() {
-
-        binding.apply {
-
-            edtBillTotal.addTextChangedListener {
-                if (isSyncingUi) return@addTextChangedListener
-
-                val rawValue = it?.toString().orEmpty()
-                val parsedValue = parseLocalizedAmount(rawValue)
-
-                when {
-                    rawValue.isBlank() -> {
-                        tilBillTotal.error = null
-                        viewModel.setBillInput(rawValue)
-                    }
-                    parsedValue != null -> {
-                        tilBillTotal.error = null
-                        viewModel.setBillInput(rawValue)
-                    }
-                    else -> {
-                        tilBillTotal.error = getString(R.string.invalid_bill_total_error)
-                        viewModel.setBillInput(rawValue)
-                    }
-                }
-            }
-
-            cgTipPresets.setOnCheckedStateChangeListener { _: ChipGroup, checkedIds: List<Int> ->
-                if (isSyncingUi) return@setOnCheckedStateChangeListener
-
-                when (checkedIds.firstOrNull()) {
-                    chipTip10.id -> applyTipPreset(10)
-                    chipTip15.id -> applyTipPreset(15)
-                    chipTip18.id -> applyTipPreset(18)
-                    chipTip20.id -> applyTipPreset(20)
-                    chipTipCustom.id -> sbTipPercent.isVisible = true
-                }
-            }
-
-            sbTipPercent.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-                override fun onProgressChanged(
-                    seekBar: SeekBar?,
-                    progress: Int,
-                    fromUser: Boolean
-                ) {
-                    if (isSyncingUi) return
-
-                    if (fromUser) {
-                        cgTipPresets.check(chipTipCustom.id)
-                    }
-                    viewModel.setTipPercentage(progress)
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-            })
-
-            btnSplitDecrease.setOnClickListener {
-                val current = lblSplitCount.text.toString().toIntOrNull() ?: MIN_SPLIT_COUNT
-                if (current > MIN_SPLIT_COUNT) {
-                    viewModel.setSplitNumber(current - 1)
-                }
-            }
-
-            btnSplitIncrease.setOnClickListener {
-                val current = lblSplitCount.text.toString().toIntOrNull() ?: MIN_SPLIT_COUNT
-                if (current < MAX_SPLIT_COUNT) {
-                    viewModel.setSplitNumber(current + 1)
-                }
-            }
-
-            tgRounding.addOnButtonCheckedListener { _: MaterialButtonToggleGroup, checkedId: Int, isChecked: Boolean ->
-                if (isSyncingUi) return@addOnButtonCheckedListener
-
-                if (isChecked) {
-                    viewModel.setIsRoundUp(checkedId == btnRoundUp.id)
-                }
+            TipCalculatorComposeTheme {
+                TipCalculatorScreen(
+                    state = displayState,
+                    billInputError = billInputError,
+                    onBillInputChanged = viewModel::setBillInput,
+                    onTipPresetSelected = { tip ->
+                        viewModel.setIsCustomTip(tip == null)
+                        if (tip != null) {
+                            viewModel.setTipPercentage(tip)
+                        }
+                    },
+                    onTipCustomChanged = {
+                        viewModel.setIsCustomTip(true)
+                        viewModel.setTipPercentage(it)
+                    },
+                    onSplitDecrease = {
+                        if (displayState.isSplitDecreaseEnabled) {
+                            viewModel.setSplitNumber(displayState.splitNum - 1)
+                        }
+                    },
+                    onSplitIncrease = {
+                        if (displayState.isSplitIncreaseEnabled) {
+                            viewModel.setSplitNumber(displayState.splitNum + 1)
+                        }
+                    },
+                    onRoundUpChanged = viewModel::setIsRoundUp,
+                )
             }
         }
     }
 
-    private fun initializeDefaults() {
+    internal fun applyStateForTest(
+        billInput: String,
+        tipPercent: Int,
+        splitNum: Int,
+        roundUp: Boolean,
+    ) {
+        viewModel.setBillInput(billInput)
+        viewModel.setIsCustomTip(tipPercent !in setOf(10, 15, 18, 20))
+        viewModel.setTipPercentage(tipPercent)
+        viewModel.setSplitNumber(splitNum)
+        viewModel.setIsRoundUp(roundUp)
+    }
+
+    internal fun currentDisplayStateForTest(): MainDisplayState {
         val state = viewModel.getUiState().value ?: MainUiState()
-        showDisplayState(displayStateFormatter.format(state, MIN_SPLIT_COUNT, MAX_SPLIT_COUNT))
-    }
-
-    private fun applyTipPreset(percent: Int) {
-        binding.sbTipPercent.progress = percent
-        binding.sbTipPercent.isVisible = false
-        viewModel.setTipPercentage(percent)
-    }
-
-    private fun showDisplayState(state: MainDisplayState) {
-        binding.apply {
-            isSyncingUi = true
-
-            syncBillTotal(state.billInput)
-            syncTipControls(state.tipPercent)
-            tgRounding.check(if (state.roundUp) btnRoundUp.id else btnRoundDown.id)
-
-            lblTotalToPayAmount.text = state.totalToPayText
-            lblTotalPerPersonAmount.text = state.totalPerPersonText
-            lblTotalTipAmount.text = state.totalTipText
-            lblTipPerPersonAmount.text = state.tipPerPersonText
-            lblTipPercentAmount.text = state.tipPercentText
-            lblSplitCount.text = state.splitNum.toString()
-            btnSplitDecrease.isEnabled = state.isSplitDecreaseEnabled
-            btnSplitIncrease.isEnabled = state.isSplitIncreaseEnabled
-
-            isSyncingUi = false
-        }
-    }
-
-    private fun syncBillTotal(billInput: String) {
-        if (binding.edtBillTotal.text?.toString() != billInput) {
-            binding.edtBillTotal.setText(billInput)
-            binding.edtBillTotal.setSelection(billInput.length)
-        }
-    }
-
-    private fun syncTipControls(tipPercent: Int) {
-        binding.sbTipPercent.progress = tipPercent
-
-        when (tipPercent) {
-            10 -> {
-                binding.cgTipPresets.check(binding.chipTip10.id)
-                binding.sbTipPercent.isVisible = false
-            }
-            15 -> {
-                binding.cgTipPresets.check(binding.chipTip15.id)
-                binding.sbTipPercent.isVisible = false
-            }
-            18 -> {
-                binding.cgTipPresets.check(binding.chipTip18.id)
-                binding.sbTipPercent.isVisible = false
-            }
-            20 -> {
-                binding.cgTipPresets.check(binding.chipTip20.id)
-                binding.sbTipPercent.isVisible = false
-            }
-            else -> {
-                binding.cgTipPresets.check(binding.chipTipCustom.id)
-                binding.sbTipPercent.isVisible = true
-            }
-        }
+        return displayStateFormatter.format(state, MIN_SPLIT_COUNT, MAX_SPLIT_COUNT)
     }
 
     private fun parseLocalizedAmount(rawValue: String): Double? {

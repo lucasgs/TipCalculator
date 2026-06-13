@@ -15,6 +15,7 @@ class MainViewModel(
         const val KEY_BILL_INPUT = "billInput"
         const val KEY_BILL_TOTAL = "billTotal"
         const val KEY_TIP_PERCENT = "tipPercent"
+        const val KEY_IS_CUSTOM_TIP = "isCustomTip"
         const val KEY_SPLIT_NUM = "splitNum"
         const val KEY_ROUND_UP = "roundUp"
         const val DEFAULT_TIP_PERCENT = 10
@@ -52,6 +53,11 @@ class MainViewModel(
         recalculate()
     }
 
+    fun setIsCustomTip(isCustomTip: Boolean) {
+        savedStateHandle[KEY_IS_CUSTOM_TIP] = isCustomTip
+        recalculate()
+    }
+
     fun setSplitNumber(number: Int) {
         savedStateHandle[KEY_SPLIT_NUM] = number
         recalculate()
@@ -69,6 +75,7 @@ class MainViewModel(
     private fun createUiState(): MainUiState {
         val billTotal = savedStateHandle[KEY_BILL_TOTAL] ?: 0.0
         val tipPercent = savedStateHandle[KEY_TIP_PERCENT] ?: DEFAULT_TIP_PERCENT
+        val isCustomTip = savedStateHandle[KEY_IS_CUSTOM_TIP] ?: false
         val splitNum = savedStateHandle[KEY_SPLIT_NUM] ?: DEFAULT_SPLIT_NUM
         val roundUp = savedStateHandle[KEY_ROUND_UP] ?: DEFAULT_ROUND_UP
         val billInput = savedStateHandle[KEY_BILL_INPUT] ?: if (billTotal == 0.0) "" else billTotal.toString()
@@ -77,6 +84,7 @@ class MainViewModel(
             billInput = billInput,
             billTotal = billTotal,
             tipPercent = tipPercent,
+            isCustomTip = isCustomTip,
             splitNum = splitNum,
             roundUp = roundUp,
             result = tipCalculator.calculate(
