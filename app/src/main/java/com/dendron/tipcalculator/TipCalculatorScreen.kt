@@ -1,5 +1,6 @@
 package com.dendron.tipcalculator
 
+import android.content.Intent
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -72,6 +73,16 @@ fun TipCalculatorScreen(
         .takeIf { it.isNotBlank() && parseLocalizedAmount(it, decimalSeparator, groupingSeparator) == null }
         ?.let { stringResource(R.string.invalid_bill_total_error) }
 
+    val shareText = remember(displayState, context) {
+        context.getString(
+            R.string.share_summary_template,
+            displayState.totalToPayText,
+            displayState.totalPerPersonText,
+            displayState.totalTipText,
+            displayState.tipPerPersonText,
+        )
+    }
+
     TipCalculatorScreenContent(
         state = displayState,
         billInputError = billInputError,
@@ -98,6 +109,16 @@ fun TipCalculatorScreen(
             }
         },
         onRoundUpChanged = viewModel::setIsRoundUp,
+        onReset = viewModel::reset,
+        onShare = {
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, shareText)
+            }
+            context.startActivity(
+                Intent.createChooser(shareIntent, context.getString(R.string.share_results_title)),
+            )
+        },
         modifier = modifier,
     )
 }
@@ -113,6 +134,8 @@ private fun TipCalculatorScreenContent(
     onSplitDecrease: () -> Unit,
     onSplitIncrease: () -> Unit,
     onRoundUpChanged: (Boolean) -> Unit,
+    onReset: () -> Unit,
+    onShare: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
@@ -306,7 +329,11 @@ private fun TipCalculatorScreenContent(
                 }
             }
 
-            TipSummaryCard(state = state)
+            TipSummaryCard(
+                state = state,
+                onReset = onReset,
+                onShare = onShare,
+            )
         }
     }
 }

@@ -35,6 +35,10 @@
     <string name="tip_preset_state_description">%1$s, %2$s</string>
     <string name="total_per_person_content_description">Total per person %1$s</string>
     <string name="summary_row_content_description">%1$s %2$s</string>
+    <string name="reset_action_label">Reset</string>
+    <string name="share_action_label">Share</string>
+    <string name="share_results_title">Share results</string>
+    <string name="share_summary_template">Tip Calculator summary\nTotal to pay: %1$s\nTotal per person: %2$s\nTotal tip: %3$s\nTip per person: %4$s</string>
 
     <plurals name="split_count_content_description">
         <item quantity="one">Split count: %d person</item>

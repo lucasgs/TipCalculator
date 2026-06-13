@@ -9,6 +9,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,6 +25,8 @@ import com.dendron.tipcalculator.ui.theme.TipCalculatorComposeTheme
 @Composable
 fun TipSummaryCard(
     state: MainDisplayState,
+    onReset: () -> Unit,
+    onShare: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val totalPerPersonDescription = stringResource(
@@ -68,6 +71,26 @@ fun TipSummaryCard(
             SummaryRow(label = stringResource(R.string.total_to_pay_title), value = state.totalToPayText)
             SummaryRow(label = stringResource(R.string.total_tip_title), value = state.totalTipText)
             SummaryRow(label = stringResource(R.string.tip_per_person_title), value = state.tipPerPersonText)
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                OutlinedButton(
+                    onClick = onReset,
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Text(stringResource(R.string.reset_action_label))
+                }
+                OutlinedButton(
+                    onClick = onShare,
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Text(stringResource(R.string.share_action_label))
+                }
+            }
         }
     }
 }
@@ -109,6 +132,8 @@ private fun TipSummaryCardPreview() {
                 isSplitDecreaseEnabled = true,
                 isSplitIncreaseEnabled = true,
             ),
+            onReset = {},
+            onShare = {},
         )
     }
 }

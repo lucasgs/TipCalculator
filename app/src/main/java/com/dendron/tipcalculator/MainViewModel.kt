@@ -71,6 +71,16 @@ class MainViewModel @Inject constructor(
         recalculate()
     }
 
+    fun reset() {
+        savedStateHandle[KEY_BILL_INPUT] = ""
+        savedStateHandle[KEY_BILL_TOTAL] = 0.0
+        savedStateHandle[KEY_TIP_PERCENT] = DEFAULT_TIP_PERCENT
+        savedStateHandle[KEY_IS_CUSTOM_TIP] = false
+        savedStateHandle[KEY_SPLIT_NUM] = DEFAULT_SPLIT_NUM
+        savedStateHandle[KEY_ROUND_UP] = DEFAULT_ROUND_UP
+        recalculate()
+    }
+
     private fun recalculate() {
         uiState.value = createUiState()
     }

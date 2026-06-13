@@ -134,4 +134,23 @@ class MainViewModelTest {
         assertEquals("12.5.", state.billInput)
         assertEquals(12.5, state.billTotal, 0.0)
     }
+
+    @Test
+    fun reset_restores_default_values() {
+        viewModel.setBillInput("99.5")
+        viewModel.setTipPercentage(20)
+        viewModel.setIsCustomTip(true)
+        viewModel.setSplitNumber(4)
+        viewModel.setIsRoundUp(false)
+
+        viewModel.reset()
+
+        val state = viewModel.getUiState().value!!
+        assertEquals("", state.billInput)
+        assertEquals(0.0, state.billTotal, 0.0)
+        assertEquals(10, state.tipPercent)
+        assertEquals(false, state.isCustomTip)
+        assertEquals(1, state.splitNum)
+        assertEquals(true, state.roundUp)
+    }
 }
