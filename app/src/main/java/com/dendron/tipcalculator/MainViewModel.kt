@@ -20,6 +20,7 @@ class MainViewModel(
         const val DEFAULT_TIP_PERCENT = 10
         const val DEFAULT_SPLIT_NUM = 1
         const val DEFAULT_ROUND_UP = true
+        val SUPPORTED_DECIMAL_SEPARATORS = charArrayOf(',', '.')
     }
 
     private val uiState = MutableLiveData(createUiState())
@@ -29,7 +30,7 @@ class MainViewModel(
     fun setBillInput(input: String) {
         savedStateHandle[KEY_BILL_INPUT] = input
 
-        val normalizedValue = input.replace(',', '.')
+        val normalizedValue = normalizeBillInput(input)
         when {
             input.isBlank() -> savedStateHandle[KEY_BILL_TOTAL] = 0.0
             normalizedValue.toDoubleOrNull() != null -> {
@@ -85,5 +86,17 @@ class MainViewModel(
                 roundUp = roundUp,
             ),
         )
+    }
+
+    private fun normalizeBillInput(input: String): String {
+        return buildString(input.length) {
+            input.forEach { char ->
+                when {
+                    char.isWhitespace() -> Unit
+                    char in SUPPORTED_DECIMAL_SEPARATORS -> append('.')
+                    char.isDigit() -> append(char)
+                }
+            }
+        }
     }
 }

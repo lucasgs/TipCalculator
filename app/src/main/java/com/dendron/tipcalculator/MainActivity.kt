@@ -14,7 +14,9 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.dendron.tipcalculator.databinding.ActivityMainBinding
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.chip.ChipGroup
+import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,7 +40,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    private val defaultFormat: NumberFormat by lazy { NumberFormat.getCurrencyInstance() }
+    private val currentLocale: Locale by lazy { resources.configuration.locales[0] ?: Locale.getDefault() }
+    private val decimalSeparator: Char by lazy { DecimalFormatSymbols.getInstance(currentLocale).decimalSeparator }
+    private val groupingSeparator: Char by lazy { DecimalFormatSymbols.getInstance(currentLocale).groupingSeparator }
+    private val defaultFormat: NumberFormat by lazy { NumberFormat.getCurrencyInstance(currentLocale) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,14 +68,14 @@ class MainActivity : AppCompatActivity() {
                 if (isSyncingUi) return@addTextChangedListener
 
                 val rawValue = it?.toString().orEmpty()
-                val normalizedValue = rawValue.replace(',', '.')
+                val parsedValue = parseLocalizedAmount(rawValue)
 
                 when {
                     rawValue.isBlank() -> {
                         tilBillTotal.error = null
                         viewModel.setBillInput(rawValue)
                     }
-                    normalizedValue.toDoubleOrNull() != null -> {
+                    parsedValue != null -> {
                         tilBillTotal.error = null
                         viewModel.setBillInput(rawValue)
                     }
@@ -199,5 +204,14 @@ class MainActivity : AppCompatActivity() {
                 binding.sbTipPercent.isVisible = true
             }
         }
+    }
+
+    private fun parseLocalizedAmount(rawValue: String): Double? {
+        val sanitized = rawValue
+            .replace(groupingSeparator.toString(), "")
+            .replace(" ", "")
+            .replace(decimalSeparator, '.')
+
+        return sanitized.toDoubleOrNull()
     }
 }

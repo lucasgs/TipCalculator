@@ -106,4 +106,32 @@ class MainViewModelTest {
         assertEquals(false, state.roundUp)
         assertEquals(57.5, state.result.totalToPay, 0.0)
     }
+
+    @Test
+    fun preserves_comma_decimal_input_and_parses_total() {
+        viewModel.setBillInput("12,5")
+
+        val state = viewModel.getUiState().value!!
+        assertEquals("12,5", state.billInput)
+        assertEquals(12.5, state.billTotal, 0.0)
+    }
+
+    @Test
+    fun ignores_spaces_when_parsing_bill_input() {
+        viewModel.setBillInput("1 234,56")
+
+        val state = viewModel.getUiState().value!!
+        assertEquals("1 234,56", state.billInput)
+        assertEquals(1234.56, state.billTotal, 0.0)
+    }
+
+    @Test
+    fun keeps_previous_total_for_invalid_bill_input() {
+        viewModel.setBillInput("12.5")
+        viewModel.setBillInput("12.5.")
+
+        val state = viewModel.getUiState().value!!
+        assertEquals("12.5.", state.billInput)
+        assertEquals(12.5, state.billTotal, 0.0)
+    }
 }
