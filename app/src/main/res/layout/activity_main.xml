@@ -1,238 +1,263 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/lblBillTotal"
-        style="@style/TextLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:labelFor="@+id/edtBillTotal"
-        android:text="@string/bill_total_label"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/edtBillTotal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:autofillHints="0.00"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        app:layout_constraintBottom_toBottomOf="@+id/lblBillTotal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/lblBillTotal"
-        app:layout_constraintTop_toTopOf="@+id/lblBillTotal" />
-
-    <TextView
-        android:id="@+id/lblTipPercent"
-        style="@style/TextLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:labelFor="@+id/sbTipPercent"
-        android:text="@string/tip_percentage_label"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/edtBillTotal" />
-
-
-    <SeekBar
-        android:id="@+id/sbTipPercent"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:max="100"
-        app:layout_constraintBottom_toBottomOf="@+id/lblTipPercent"
-        app:layout_constraintEnd_toEndOf="@+id/edtBillTotal"
-        app:layout_constraintStart_toStartOf="@+id/edtBillTotal"
-        app:layout_constraintTop_toTopOf="@+id/lblTipPercent" />
-
-    <TextView
-        android:id="@+id/lblTipPercentAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/sbTipPercent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/sbTipPercent"
-        app:layout_constraintTop_toTopOf="@+id/sbTipPercent"
-        tools:text="100 %" />
-
-    <TextView
-        android:id="@+id/lblSplit"
-        style="@style/TextLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:labelFor="@id/sbSplit"
-        android:text="@string/split_label"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/sbTipPercent" />
-
-    <SeekBar
-        android:id="@+id/sbSplit"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:max="19"
-        app:layout_constraintBottom_toBottomOf="@+id/lblSplit"
-        app:layout_constraintEnd_toEndOf="@+id/sbTipPercent"
-        app:layout_constraintStart_toStartOf="@+id/sbTipPercent"
-        app:layout_constraintTop_toTopOf="@+id/lblSplit" />
-
-    <TextView
-        android:id="@+id/lblSplitCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/sbSplit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/sbSplit"
-        app:layout_constraintTop_toTopOf="@+id/sbSplit"
-        tools:text="1" />
-
-    <TextView
-        android:id="@+id/lblRounding"
-        style="@style/TextLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/rounding_label"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/sbSplit" />
-
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/tgRounding"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:checkedButton="@+id/btnRoundUp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="@+id/sbSplit"
-        app:layout_constraintStart_toStartOf="@+id/sbSplit"
-        app:layout_constraintTop_toBottomOf="@+id/lblRounding"
-        app:selectionRequired="true"
-        app:singleSelection="true">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnRoundUp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/round_up_label" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnRoundDown"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/round_down_label" />
-    </com.google.android.material.button.MaterialButtonToggleGroup>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="210dp" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="@+id/lblSplitCount"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
-
-    <TextView
-        android:id="@+id/lblTotalToPay"
-        style="@style/ResultTextLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/total_to_pay_label"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
-
-    <TextView
-        android:id="@+id/lblTotalToPayAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/ResultTextText"
-        app:layout_constraintEnd_toEndOf="@+id/sbSplit"
-        app:layout_constraintTop_toTopOf="@+id/lblTotalToPay"
-        tools:text="$0.00" />
-
-    <TextView
-        android:id="@+id/lblTotalPerPerson"
-        style="@style/ResultTextLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/total_per_person_label"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/lblTotalToPay" />
-
-    <TextView
-        android:id="@+id/lblTotalPerPersonAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/ResultTextText"
-        app:layout_constraintEnd_toEndOf="@+id/lblTotalToPayAmount"
-        app:layout_constraintTop_toTopOf="@+id/lblTotalPerPerson"
-        tools:text="$0.00" />
-
-    <TextView
-        android:id="@+id/lblTotalTip"
-        style="@style/ResultTextLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/total_tip_label"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/lblTotalPerPerson" />
-
-    <TextView
-        android:id="@+id/lblTotalTipAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/ResultTextText"
-        app:layout_constraintEnd_toEndOf="@+id/lblTotalPerPersonAmount"
-        app:layout_constraintTop_toTopOf="@+id/lblTotalTip"
-        tools:text="$0.00" />
-
-    <TextView
-        android:id="@+id/lblTipPerPerson"
-        style="@style/ResultTextLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/tip_per_person_label"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/lblTotalTip" />
-
-    <TextView
-        android:id="@+id/lblTipPerPersonAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/ResultTextText"
-        app:layout_constraintEnd_toEndOf="@+id/lblTotalTipAmount"
-        app:layout_constraintTop_toTopOf="@+id/lblTipPerPerson"
-        tools:text="$0.00" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_left"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
+        android:padding="16dp">
 
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/input_section_title"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilBillTotal"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/bill_total_hint"
+                    app:prefixText="@string/currency_prefix">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtBillTotal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal"
+                        tools:text="123.45" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lblTipPercent"
+                        style="@style/TextLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tip_percentage_label" />
+
+                    <TextView
+                        android:id="@+id/lblTipPercentAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                        tools:text="10 %" />
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/sbTipPercent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lblSplit"
+                        style="@style/TextLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/split_label" />
+
+                    <TextView
+                        android:id="@+id/lblSplitCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                        tools:text="1" />
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/sbSplit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="19" />
+
+                <TextView
+                    android:id="@+id/lblRounding"
+                    style="@style/TextLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/rounding_label" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/tgRounding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:checkedButton="@+id/btnRoundUp"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRoundUp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/round_up_label" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRoundDown"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/round_down_label" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/results_section_title"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                <TextView
+                    android:id="@+id/lblTotalPerPerson"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/total_per_person_label"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
+                <TextView
+                    android:id="@+id/lblTotalPerPersonAmount"
+                    style="@style/ResultPrimaryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="$55.00" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="?attr/colorOnSurface" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/lblTotalToPay"
+                            style="@style/ResultTextLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/total_to_pay_label" />
+
+                        <TextView
+                            android:id="@+id/lblTotalToPayAmount"
+                            style="@style/ResultTextText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="$110.00" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/lblTotalTip"
+                            style="@style/ResultTextLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/total_tip_label" />
+
+                        <TextView
+                            android:id="@+id/lblTotalTipAmount"
+                            style="@style/ResultTextText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="$10.00" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/lblTipPerPerson"
+                            style="@style/ResultTextLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/tip_per_person_label" />
+
+                        <TextView
+                            android:id="@+id/lblTipPerPersonAmount"
+                            style="@style/ResultTextText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="$5.00" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

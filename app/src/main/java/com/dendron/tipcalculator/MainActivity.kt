@@ -44,15 +44,15 @@ class MainActivity : AppCompatActivity() {
 
                 when {
                     rawValue.isBlank() -> {
-                        edtBillTotal.error = null
+                        tilBillTotal.error = null
                         viewModel.setBillTotal(0.0)
                     }
                     normalizedValue.toDoubleOrNull() != null -> {
-                        edtBillTotal.error = null
+                        tilBillTotal.error = null
                         viewModel.setBillTotal(normalizedValue.toDouble())
                     }
                     else -> {
-                        edtBillTotal.error = getString(R.string.invalid_bill_total_error)
+                        tilBillTotal.error = getString(R.string.invalid_bill_total_error)
                     }
                 }
             }

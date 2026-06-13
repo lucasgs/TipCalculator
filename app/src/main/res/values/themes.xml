@@ -28,5 +28,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="ResultPrimaryText">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 
 </resources>

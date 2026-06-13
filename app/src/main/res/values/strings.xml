@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">Tip Calculator</string>
+    <string name="input_section_title">Bill details</string>
+    <string name="results_section_title">Summary</string>
     <string name="bill_total_label">Bill Total:</string>
-    <string name="tip_percentage_label">Tip %:</string>
+    <string name="bill_total_hint">Enter bill amount</string>
+    <string name="currency_prefix">$</string>
+    <string name="tip_percentage_label">Tip</string>
     <string name="split_label">Split:</string>
     <string name="rounding_label">Rounding:</string>
     <string name="round_down_label">Round down</string>
