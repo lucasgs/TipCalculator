@@ -54,7 +54,11 @@ fun TipCalculatorScreen(
     val currentLocale = remember { context.resources.configuration.locales[0] ?: Locale.getDefault() }
     val decimalSeparator = remember { DecimalFormatSymbols.getInstance(currentLocale).decimalSeparator }
     val groupingSeparator = remember { DecimalFormatSymbols.getInstance(currentLocale).groupingSeparator }
-    val formatter = remember { MainDisplayStateFormatter(NumberFormat.getCurrencyInstance(currentLocale)) }
+    val currencyFormat = remember(currentLocale) { NumberFormat.getCurrencyInstance(currentLocale) }
+    val currencySymbol = remember(currencyFormat, currentLocale) {
+        currencyFormat.currency?.getSymbol(currentLocale).orEmpty()
+    }
+    val formatter = remember(currencyFormat) { MainDisplayStateFormatter(currencyFormat) }
 
     val uiState by viewModel.getUiState().observeAsState(MainUiState())
     val displayState = remember(uiState, formatter) { formatter.format(uiState) }
@@ -65,6 +69,7 @@ fun TipCalculatorScreen(
     TipCalculatorScreenContent(
         state = displayState,
         billInputError = billInputError,
+        currencySymbol = currencySymbol,
         onBillInputChanged = viewModel::setBillInput,
         onTipPresetSelected = { tip ->
             viewModel.setIsCustomTip(tip == null)
@@ -95,6 +100,7 @@ fun TipCalculatorScreen(
 private fun TipCalculatorScreenContent(
     state: MainDisplayState,
     billInputError: String?,
+    currencySymbol: String,
     onBillInputChanged: (String) -> Unit,
     onTipPresetSelected: (Int?) -> Unit,
     onTipCustomChanged: (Int) -> Unit,
@@ -152,7 +158,7 @@ private fun TipCalculatorScreenContent(
                                 )
                             }
                         },
-                        prefix = { Text(stringResource(R.string.currency_prefix)) },
+                        prefix = if (currencySymbol.isBlank()) null else ({ Text(currencySymbol) }),
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Decimal,

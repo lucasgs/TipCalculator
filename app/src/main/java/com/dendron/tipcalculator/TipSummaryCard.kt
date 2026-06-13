@@ -33,13 +33,13 @@ fun TipSummaryCard(
     Card(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                text = "Summary",
+                text = stringResource(R.string.results_section_title),
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.semantics { heading() },
             )
 
             Text(
-                text = "Total per person",
+                text = stringResource(R.string.total_per_person_title),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(top = 20.dp),
             )
@@ -54,9 +54,9 @@ fun TipSummaryCard(
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
-            SummaryRow(label = "Total to pay", value = state.totalToPayText)
-            SummaryRow(label = "Total tip", value = state.totalTipText)
-            SummaryRow(label = "Tip per person", value = state.tipPerPersonText)
+            SummaryRow(label = stringResource(R.string.total_to_pay_title), value = state.totalToPayText)
+            SummaryRow(label = stringResource(R.string.total_tip_title), value = state.totalTipText)
+            SummaryRow(label = stringResource(R.string.tip_per_person_title), value = state.tipPerPersonText)
         }
     }
 }

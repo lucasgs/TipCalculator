@@ -4,7 +4,6 @@
     <string name="results_section_title">Summary</string>
     <string name="bill_total_label">Bill Total:</string>
     <string name="bill_total_hint">Enter bill amount</string>
-    <string name="currency_prefix">$</string>
     <string name="tip_percentage_label">Tip</string>
     <string name="tip_preset_10">10%</string>
     <string name="tip_preset_15">15%</string>
@@ -23,6 +22,10 @@
     <string name="total_tip_label">Total tip:</string>
     <string name="tip_percentage_amount_title">%d %%</string>
     <string name="tip_per_person_label">Tip per person:</string>
+    <string name="total_to_pay_title">Total to pay</string>
+    <string name="total_per_person_title">Total per person</string>
+    <string name="total_tip_title">Total tip</string>
+    <string name="tip_per_person_title">Tip per person</string>
     <string name="tip_presets_group_description">Tip percentage presets</string>
     <string name="custom_tip_slider_description">Custom tip percentage</string>
     <string name="split_decrease_content_description">Decrease split count</string>

@@ -4,6 +4,7 @@ import com.dendron.tipcalculator.domain.Result
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import org.junit.Assert.assertNotEquals
 import org.junit.Test
 import java.text.NumberFormat
 import java.util.Locale
@@ -44,5 +45,27 @@ class MainDisplayStateFormatterTest {
         assertTrue(displayState.isSplitDecreaseEnabled)
         assertTrue(displayState.isSplitIncreaseEnabled)
         assertFalse(displayState.roundUp)
+    }
+
+    @Test
+    fun formats_currency_for_non_us_locale() {
+        val frenchFormatter = MainDisplayStateFormatter(NumberFormat.getCurrencyInstance(Locale.FRANCE))
+        val state = MainUiState(
+            result = Result(
+                billTotal = 12.5,
+                tipPercent = 10,
+                splitNum = 1,
+                roundUp = true,
+                totalTip = 1.25,
+                tipPerPerson = 1.25,
+                totalPerPerson = 14.0,
+                totalToPay = 14.0,
+            ),
+        )
+
+        val displayState = frenchFormatter.format(state)
+
+        assertNotEquals("$14.00", displayState.totalToPayText)
+        assertTrue(displayState.totalToPayText.contains('€'))
     }
 }
